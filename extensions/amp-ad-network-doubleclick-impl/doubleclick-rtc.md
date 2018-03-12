@@ -17,6 +17,24 @@ AMP Real Time Config (RTC) is a feature of Fast Fetch that allows Publishers to 
 
 For instructions on how to set the rtc-config attribute on the amp-ad, refer to [Setting Up RTC-Config](https://github.com/ampproject/amphtml/blob/master/extensions/amp-a4a/rtc-publisher-implementation-guide.md#setting-up-rtc-config) in the Publisher Implementation Guide.
 
+## Available URL Macros
+Doubleclick's RTC implementation has made many macros available for RTC url expansion. Please note that the time to expand the URL is counted against the RTC timeout. Additionally, note that all RTC URLs are truncated at 16384 characters, so keep possible truncation in mind when determining which macros to include, and which order to include them in your URL. Currently available macros are as follows:
+
+- **PAGEVIEWID** - pageViewId
+- **HREF** - equivalent to window.context.location.href
+- **ATTR(height)** - Height attribute of the amp-ad element
+- **ATTR(width)** - Width attribute of the amp-ad element
+- **ATTR(data-slot)** - data-slot attribute of the amp-ad element
+- **ATTR(data-multi-size)** - data-multi-size attribute of the amp-ad element
+- **ATTR(data-multi-size-validation)** - data-multi-size-validation attribute of the amp-ad element
+- **ATTR(data-override-width)** - data-override-width attribute of the amp-ad element
+- **ATTR(data-override-height)** - data-override-height attribute of the amp-ad element
+- **ATTR(data-json)** -  data-json attribute of the amp-ad element
+- **ADCID** - adClientId 
+- **TGT** - Just the targeting piece of data-json
+- **CANONICAL_URL** - The canonical URL of the page. 
+- **TIMEOUT** - The publisher-specified timeout for the RTC callout. 
+
 
 ## Response and Endpoint Specification
 

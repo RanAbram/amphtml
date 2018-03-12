@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import {AmpEvents} from '../../../src/amp-events';
 import {ActionTrust} from '../../../src/action-trust';
+import {AmpEvents} from '../../../src/amp-events';
 import {CSS} from '../../../build/amp-live-list-0.1.css';
+import {Layout, isLayoutSizeDefined} from '../../../src/layout';
+import {LiveListManager, liveListManagerForDoc} from './live-list-manager';
 import {childElementByAttr} from '../../../src/dom';
-import {liveListManagerForDoc, LiveListManager} from './live-list-manager';
-import {isLayoutSizeDefined, Layout} from '../../../src/layout';
-import {user} from '../../../src/log';
 import {isExperimentOn} from '../../../src/experiments';
+import {user} from '../../../src/log';
 
 
 /**
@@ -269,7 +269,7 @@ export class AmpLiveList extends AMP.BaseElement {
     // We prefer user interaction if we have pending items to insert at the
     // top of the component.
     if (this.pendingItemsInsert_.length > 0) {
-      this.deferMutate(() => {
+      this.mutateElement(() => {
         this.toggleUpdateButton_(true);
         this.viewport_.updateFixedLayer();
       });

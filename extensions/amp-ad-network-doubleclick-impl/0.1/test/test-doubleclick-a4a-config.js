@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
+import * as sinon from 'sinon';
 import {
-  doubleclickIsA4AEnabled,
-  DOUBLECLICK_UNCONDITIONED_EXPERIMENTS,
   DOUBLECLICK_EXPERIMENT_FEATURE,
+  DOUBLECLICK_UNCONDITIONED_EXPERIMENTS,
+  DoubleclickA4aEligibility,
   UNCONDITIONED_CANONICAL_FF_HOLDBACK_EXP_NAME,
   URL_EXPERIMENT_MAPPING,
-  DoubleclickA4aEligibility,
+  doubleclickIsA4AEnabled,
 } from '../doubleclick-a4a-config';
-import {
-  isInExperiment,
-  MANUAL_EXPERIMENT_ID,
-} from '../../../../ads/google/a4a/traffic-experiments';
 import {EXPERIMENT_ATTRIBUTE} from '../../../../ads/google/a4a/utils';
-import {parseUrl} from '../../../../src/url';
+import {
+  MANUAL_EXPERIMENT_ID,
+  isInExperiment,
+} from '../../../../ads/google/a4a/traffic-experiments';
 import {createIframePromise} from '../../../../testing/iframe';
-import * as sinon from 'sinon';
+import {parseUrl} from '../../../../src/url';
 
 describe('doubleclick-a4a-config', () => {
   let sandbox;
@@ -80,6 +80,21 @@ describe('doubleclick-a4a-config', () => {
       expect(
           doubleclickIsA4AEnabled(mockWin, elem, useRemoteHtml)).to.be.false;
       expect(elem.getAttribute(EXPERIMENT_ATTRIBUTE)).to.not.be.ok;
+    });
+
+    it('should use FFF if useRemoteHtml is true and in experiment', () => {
+      // Ensure no selection in order to very experiment attribute.
+      sandbox.stub(DoubleclickA4aEligibility.prototype, 'maybeSelectExperiment')
+          .returns(null);
+      mockWin.location = parseUrl(
+          'https://cdn.ampproject.org/some/path/to/content.html?exp=da:10');
+      const elem = testFixture.doc.createElement('div');
+      elem.setAttribute('type', 'doubleclick');
+      testFixture.doc.body.appendChild(elem);
+      const useRemoteHtml = true;
+      expect(
+          doubleclickIsA4AEnabled(mockWin, elem, useRemoteHtml)).to.be.true;
+      expect(elem.getAttribute(EXPERIMENT_ATTRIBUTE)).to.be.ok;
     });
 
     it('should use Fast Fetch if useRemoteHtml is true and RTC is set', () => {
@@ -171,8 +186,9 @@ describe('doubleclick-a4a-config', () => {
             String(expFlagValue));
         const elem = testFixture.doc.createElement('div');
         testFixture.doc.body.appendChild(elem);
-        // Enabled for all
-        expect(doubleclickIsA4AEnabled(mockWin, elem)).to.be.true;
+        // Enabled for all except da:9
+        expect(doubleclickIsA4AEnabled(mockWin, elem)).to.equal(
+            expFlagValue != '9');
         if (expFlagValue == 0) {
           expect(elem.getAttribute(EXPERIMENT_ATTRIBUTE)).to.not.be.ok;
         } else {
