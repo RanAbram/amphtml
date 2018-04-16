@@ -62,6 +62,9 @@ function getMainWidgetContainer(global, data) {
  * @param {!Object} data The element data
  * @return {!Element} div
  */
+
+// make sure params are correct
+// check if we need to insert a div when we have no data -> carousel-no-data-div (appears in the assets)
 function getReviewsCarouselContainer(global, data) {
     const container = global.document.createElement('div');
     container.className = 'yotpo yotpo-reviews-carousel yotpo-size-7';
@@ -100,6 +103,56 @@ function getUgcGalleryContainer(global, data) {
 }
 
 /**
+ * Create DOM element for the Yotpo Badged plugin:
+ * @param {!Window} global
+ * @param {!Object} data The element data
+ * @return {!Element} div
+ */
+function getBadgetsContainer(global) {
+  const container = global.document.createElement('div');
+  container.className = 'yotpo yotpo-badge badge-init';
+  container.setAttribute('id', 'y-badges');
+  return container;
+}
+
+function getReviewsTabContainer(global) {
+  const container = global.document.createElement('div');
+  container.className = 'yotpo yotpo-modal';
+  return container;
+}
+
+function getProductGalleryContainer(global) {
+  const container = global.document.createElement('div');
+  container.className = 'yotpo yotpo-pictures-gallery yotpo-product-gallery ' +
+    'yotpo-size-6';
+  container.setAttribute('data-product-id', data.productId);
+  container.setAttribute('data-demo', data.demo);
+  container.setAttribute('data-layout-rows', data.layoutRows);
+  container.setAttribute('data-layout-scroll', data.layoutScroll);
+  container.setAttribute('data-spacing', data.spacing);
+  container.setAttribute('data-source', data.source);
+  container.setAttribute('data-title', data.title);
+  container.setAttribute('data-hover-color', data.hoverColor);
+  container.setAttribute('data-hover-opacity', data.hoverOpacity);
+  container.setAttribute('data-hover-icon', data.hoverIcon);
+  container.setAttribute('data-upload-button', data.uploadButton);
+  container.setAttribute('data-preview', data.preview);
+  container.setAttribute('data-yotpo-element-id', data.yotpoElementId);
+  return container;
+}
+
+function getVisualUgcGalleryContainer(global) {
+  const container = global.document.createElement('div');
+  container.className = 'yotpo yotpo-preview-pictures-gallery';
+
+  const childDiv = global.document.createElement('div');
+  childDiv.className = 'yotpo yotpo-pictures-gallery';
+  container.appendChild(childDiv);
+
+  return container;
+}
+
+/**
  * @param {!Window} global
  * @param {!Object} data
  */
@@ -116,6 +169,14 @@ export function yotpo(global, data) {
         container = getReviewsCarouselContainer(global, data);
     } else if (widgetType == "PicturesGallery") {
         container = getUgcGalleryContainer(global, data);
+    } else if (widgetType == "Badge") {
+      container = getBadgetsContainer(global);
+    } else if (widgetType == "ReviewsTab") {
+      container = getReviewsTabContainer(global);
+    } else if (widgetType == "ProductGallery") {
+      container = getProductGalleryContainer(global);
+    } else if (widgetType == "VisualUgcGallery") {
+      container = getVisualUgcGalleryContainer(global);
     }
 
     global.document.getElementById('c').appendChild(container);
