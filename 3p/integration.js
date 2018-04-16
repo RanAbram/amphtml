@@ -667,7 +667,8 @@ function installContextUsingStandardImpl(win, data) {
 
   if (embedType === 'facebook' ||
       embedType === 'twitter' ||
-      embedType === 'github') {
+      embedType === 'github' ||
+      embedType === 'yotpo') {
     // Only make this available to selected embeds until the
     // generic solution is available.
     win.context.updateDimensions = triggerDimensions;
